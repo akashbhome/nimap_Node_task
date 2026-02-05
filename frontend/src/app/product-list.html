@@ -1,0 +1,63 @@
+<div class="page">
+  <div class="card">
+    <h1 style="color: rgb(19, 18, 18);">Products</h1>
+
+    <div class="actions">
+        <button class="btn-green" (click)="showAddProduct = !showAddProduct">Add Product</button>
+        <button class="btn-green" (click)="showAddCategory = !showAddCategory">Add Category</button>
+      </div>
+
+      <div *ngIf="showAddCategory" class="form">
+        <input placeholder="Category name" [(ngModel)]="newCategory" />
+        <button class="btn-green" (click)="addCategory()">Add</button>
+      </div>
+
+      <div *ngIf="showAddProduct" class="form">
+        <input placeholder="Product name" [(ngModel)]="newProduct.name" />
+        <select [(ngModel)]="newProduct.cid">
+          <option [ngValue]="null">Select category</option>
+          <option *ngFor="let c of categories" [ngValue]="c.cid">{{ c.catename }}</option>
+        </select>
+        <button class="btn-green" (click)="addProduct()">Add</button>
+      </div>
+
+      <div class="table-wrap">
+        <table *ngIf="!loading && products.length" class="data-table">
+        <thead>
+          <tr>
+            <th>Sr.no</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Action</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pageProducts; index as i">
+            <td>{{ (currentPage-1)*pageSize + i + 1 }}</td>
+            <td>{{ p.pname }}</td>
+            <td>{{ getCategoryName(p.cid) }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-green" (click)="updateProduct(p)">Update</button>
+                <button class="btn-delete" (click)="deleteProduct(p.pid)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && products.length === 0" class="empty">No products to show</div>
+
+      <div *ngIf="products.length" class="pagination">
+          <div class="info">Showing {{ (currentPage-1)*pageSize + 1 }} - {{ endIndex }} of {{ products.length }}</div>
+        <div class="controls">
+          <button class="page-btn" (click)="prevPage()" [disabled]="currentPage===1">Prev</button>
+          <button class="page-btn" *ngFor="let p of pages" (click)="setPage(p)" [class.active]="p===currentPage">{{ p }}</button>
+          <button class="page-btn" (click)="nextPage()" [disabled]="currentPage===totalPages">Next</button>
+        </div>
+      </div>
+
+  </div>
+</div>
